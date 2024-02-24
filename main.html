@@ -1,132 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz App</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-
-    h1 {
-      text-align: center;
-    }
-
-    .quiz-container {
-      max-width: 600px;
-      margin: auto;
-    }
-
-    .question {
-      margin-bottom: 20px;
-    }
-
-    .options label {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    #submit-btn {
-      display: block;
-      margin-top: 20px;
-      cursor: pointer;
-    }
-
-    #score {
-      text-align: center;
-      margin-top: 30px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="questions"></div>
+    <button id="submit">Submit</button>
+    <div id="score"></div>
 
-<div class="quiz-container">
-  <h1>Quiz Time!</h1>
-
-  <div class="question" id="question1">
-    <p>1. What is the capital of France?</p>
-    <div class="options">
-      <label><input type="radio" name="q1" value="Paris"> Paris</label>
-      <label><input type="radio" name="q1" value="London"> London</label>
-      <label><input type="radio" name="q1" value="Berlin"> Berlin</label>
-      <label><input type="radio" name="q1" value="Rome"> Rome</label>
-    </div>
-  </div>
-
-  <div class="question" id="question2">
-    <p>2. Which planet is known as the Red Planet?</p>
-    <div class="options">
-      <label><input type="radio" name="q2" value="Mars"> Mars</label>
-      <label><input type="radio" name="q2" value="Venus"> Venus</label>
-      <label><input type="radio" name="q2" value="Jupiter"> Jupiter</label>
-      <label><input type="radio" name="q2" value="Saturn"> Saturn</label>
-    </div>
-  </div>
-
-  <!-- Add more questions as needed -->
-
-  <button id="submit">Submit</button>
-
-  <div id="score"></div>
-</div>
-
-<script>
-  // Check if there is any saved progress in session storage
-  const savedProgress = JSON.parse(sessionStorage.getItem('progress')) || {};
-
-  // Populate saved answers on page load
-  for (const questionId in savedProgress) {
-    const selectedOption = savedProgress[questionId];
-    if (selectedOption) {
-      document.querySelector(`input[name="${questionId}"][value="${selectedOption}"]`).checked = true;
-    }
-  }
-
-  // Event listener for option selection
-  document.addEventListener('change', function (event) {
-    if (event.target.type === 'radio') {
-      const questionId = event.target.name;
-      const selectedOption = event.target.value;
-
-      // Save progress in session storage
-      savedProgress[questionId] = selectedOption;
-      sessionStorage.setItem('progress', JSON.stringify(savedProgress));
-    }
-  });
-
-  // Event listener for quiz submission
-  document.getElementById('submit-btn').addEventListener('click', function () {
-    let score = 0;
-
-    // Calculate score
-    for (const questionId in savedProgress) {
-      const selectedOption = savedProgress[questionId];
-      const correctAnswer = getCorrectAnswer(questionId);
-
-      if (selectedOption === correctAnswer) {
-        score++;
-      }
-    }
-
-    // Display score
-    document.getElementById('score').textContent = `Your score is ${score} out of 5.`;
-
-    // Store score in local storage
-    localStorage.setItem('score', score);
-  });
-
-  // Function to get correct answers (replace with your correct answers)
-  function getCorrectAnswer(questionId) {
-    const correctAnswers = {
-      'q1': 'Paris',
-      'q2': 'Mars',
-      // Add more correct answers as needed
-    };
-    return correctAnswers[questionId];
-  }
-</script>
-
+    <script type="text/javascript" src="script.js"></script>
 </body>
 </html>
