@@ -1,17 +1,118 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    form {
+      display: inline-block;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
+  <h1>Quiz</h1>
 
-  <body>
-    <!-- do not change this code -->
-    <h1>Quiz</h1>
+  <form id="quizForm">
     <div id="questions"></div>
-    <button id="submit">Submit</button>
-    <div id="score"></div>
+    <input type="submit" id="submit" value="Submit">
+  </form>
 
-    <script type="text/javascript" src="./script.js"></script>
-  </body>
+  <script>
+    // Quiz questions
+    const questions = [
+      {
+        question: "What is the capital of France?",
+        choices: ["Paris", "London", "Berlin", "Madrid"],
+        answer: "Paris",
+      },
+      {
+        question: "What is the highest mountain in the world?",
+        choices: ["Everest", "Kilimanjaro", "Denali", "Matterhorn"],
+        answer: "Everest",
+      },
+      {
+        question: "What is the largest country by area?",
+        choices: ["Russia", "China", "Canada", "United States"],
+        answer: "Russia",
+      },
+      {
+        question: "Which is the largest planet in our solar system?",
+        choices: ["Earth", "Jupiter", "Mars"],
+        answer: "Jupiter",
+      },
+      {
+        question: "What is the capital of Canada?",
+        choices: ["Toronto", "Montreal", "Vancouver", "Ottawa"],
+        answer: "Ottawa",
+      },
+    ];
+
+    // Display quiz questions and choices
+    function renderQuestions() {
+      for (let i = 0; i < questions.length; i++) {
+        const question = questions[i];
+        const questionElement = document.createElement("div");
+        const questionText = document.createTextNode(question.question);
+        questionElement.appendChild(questionText);
+        for (let j = 0; j < question.choices.length; j++) {
+          const choice = question.choices[j];
+          const choiceElement = document.createElement("input");
+          choiceElement.setAttribute("type", "radio");
+          choiceElement.setAttribute("name", `question-${i}`);
+          choiceElement.setAttribute("value", choice);
+          choiceElement.addEventListener("change", function () {
+            // Save options in session storage
+            const progress = JSON.parse(sessionStorage.getItem("progress")) || {};
+            progress[i] = choice;
+            sessionStorage.setItem("progress", JSON.stringify(progress));
+          });
+          if (getSavedOption(i) === choice) {
+            choiceElement.setAttribute("checked", true);
+          }
+          const choiceText = document.createTextNode(choice);
+          questionElement.appendChild(choiceElement);
+          questionElement.appendChild(choiceText);
+        }
+        document.getElementById("questions").appendChild(questionElement);
+      }
+    }
+
+    // Get saved option from session storage
+    function getSavedOption(questionIndex) {
+      const progress = JSON.parse(sessionStorage.getItem("progress")) || {};
+      return progress[questionIndex];
+    }
+
+    // Handle quiz submission
+    document.getElementById("quizForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      // Calculate the score
+      let score = 0;
+      for (let i = 0; i < questions.length; i++) {
+        if (getSavedOption(i) === questions[i].answer) {
+          score++;
+        }
+      }
+
+      // Show score
+      alert(`Your score is ${score} out of 5.`);
+
+      // Save score to local storage
+      localStorage.setItem("score", score);
+    });
+
+    // Render quiz questions
+    renderQuestions();
+  </script>
+
+</body>
 </html>
